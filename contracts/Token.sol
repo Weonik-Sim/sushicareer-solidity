@@ -35,25 +35,27 @@ contract Token {
         string companyUrl;
         uint256 employeeSendToken;
         uint256 employeeReceiveToken;
+        string employeeSlackId;
     }
 
     Employee[] public employees;
     mapping(address => uint) public employeeAddressId;         // employeesのINDEX
     mapping(address => bool) public employeeExist;      // 既に登録済みかどうか
     mapping(uint => address) public employeeIdAddress;    // employeesのINDEXからアドレスを取得
-    // mapping(address => bool) public employeeCompanyExist;  // 会社に所属しているかどうか
-    // mapping(address => uint) public employeeCompanyId;  // 会社に所属する時に設定
+    mapping(string => uint) public employeeSlackId;   // employeesのSlackIDからINDEXを取得
+    
     event RegisterEmployee(uint id, string userName, uint256 employeeZanToken);
 
     // ユーザー登録
-    function _createEmployee(string memory _name, string memory _companyName, string memory _companyUrl) public {
+    function _createEmployee(string memory _name, string memory _companyName, string memory _companyUrl, string memory _slackId) public {
         require(employeeExist[msg.sender] == false, "Employee already exists");
-        employees.push(Employee(msg.sender, _name, 1000, _companyName, _companyUrl, 0, 0));
+        employees.push(Employee(msg.sender, _name, 1000, _companyName, _companyUrl, 0, 0, _slackId));
         uint id = employees.length - 1;
         employeeAddressId[msg.sender] = id;
         employeeIdAddress[id] = msg.sender;
         employeeExist[msg.sender] = true;
-        // employeeCompanyExist[msg.sender] = false;
+        employeeSlackId[_slackId] = id;
+        
         emit RegisterEmployee(id, _name, employees[id].employeeZanToken);
     }
 
@@ -68,6 +70,14 @@ contract Token {
     function getEmployeeInfoAddress() public view returns (uint256, Employee memory) {
         require(employeeExist[msg.sender] == true, string(abi.encodePacked("Employee not exists: ", msg.sender)));
         uint id = employeeAddressId[msg.sender];
+
+        return (id, employees[id]);
+    }
+
+    function getEmployeeInfoSlack(string memory _slackId) public view returns (uint256, Employee memory) {
+        require(employeeExist[msg.sender] == true, string(abi.encodePacked("Employee not exists: ", msg.sender)));
+        require(employeeExist[employeeIdAddress[employeeSlackId[_slackId]]] == true, string(abi.encodePacked("Employee not exists: ", msg.sender)));
+        uint id = employeeSlackId[_slackId];
 
         return (id, employees[id]);
     }

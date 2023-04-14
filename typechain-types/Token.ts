@@ -36,6 +36,7 @@ export declare namespace Token {
     companyUrl: PromiseOrValue<string>;
     employeeSendToken: PromiseOrValue<BigNumberish>;
     employeeReceiveToken: PromiseOrValue<BigNumberish>;
+    employeeSlackId: PromiseOrValue<string>;
   };
 
   export type EmployeeStructOutput = [
@@ -45,7 +46,8 @@ export declare namespace Token {
     string,
     string,
     BigNumber,
-    BigNumber
+    BigNumber,
+    string
   ] & {
     employeeAddress: string;
     employeeName: string;
@@ -54,20 +56,23 @@ export declare namespace Token {
     companyUrl: string;
     employeeSendToken: BigNumber;
     employeeReceiveToken: BigNumber;
+    employeeSlackId: string;
   };
 }
 
 export interface TokenInterface extends utils.Interface {
   functions: {
-    "_createEmployee(string,string,string)": FunctionFragment;
+    "_createEmployee(string,string,string,string)": FunctionFragment;
     "_getAllThings()": FunctionFragment;
     "_getEmployeeInfo(uint256)": FunctionFragment;
     "_sendSushi(uint256,uint256,uint256)": FunctionFragment;
     "employeeAddressId(address)": FunctionFragment;
     "employeeExist(address)": FunctionFragment;
     "employeeIdAddress(uint256)": FunctionFragment;
+    "employeeSlackId(string)": FunctionFragment;
     "employees(uint256)": FunctionFragment;
     "getEmployeeInfoAddress()": FunctionFragment;
+    "getEmployeeInfoSlack(string)": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
   };
@@ -81,8 +86,10 @@ export interface TokenInterface extends utils.Interface {
       | "employeeAddressId"
       | "employeeExist"
       | "employeeIdAddress"
+      | "employeeSlackId"
       | "employees"
       | "getEmployeeInfoAddress"
+      | "getEmployeeInfoSlack"
       | "name"
       | "symbol"
   ): FunctionFragment;
@@ -90,6 +97,7 @@ export interface TokenInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "_createEmployee",
     values: [
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>
@@ -124,12 +132,20 @@ export interface TokenInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "employeeSlackId",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "employees",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getEmployeeInfoAddress",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getEmployeeInfoSlack",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
@@ -159,9 +175,17 @@ export interface TokenInterface extends utils.Interface {
     functionFragment: "employeeIdAddress",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "employeeSlackId",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "employees", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getEmployeeInfoAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getEmployeeInfoSlack",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -218,6 +242,7 @@ export interface Token extends BaseContract {
       _name: PromiseOrValue<string>,
       _companyName: PromiseOrValue<string>,
       _companyUrl: PromiseOrValue<string>,
+      _slackId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -252,11 +277,25 @@ export interface Token extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    employeeSlackId(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     employees(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, string, string, BigNumber, BigNumber] & {
+      [
+        string,
+        string,
+        BigNumber,
+        string,
+        string,
+        BigNumber,
+        BigNumber,
+        string
+      ] & {
         employeeAddress: string;
         employeeName: string;
         employeeZanToken: BigNumber;
@@ -264,10 +303,16 @@ export interface Token extends BaseContract {
         companyUrl: string;
         employeeSendToken: BigNumber;
         employeeReceiveToken: BigNumber;
+        employeeSlackId: string;
       }
     >;
 
     getEmployeeInfoAddress(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
+
+    getEmployeeInfoSlack(
+      _slackId: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
 
@@ -280,6 +325,7 @@ export interface Token extends BaseContract {
     _name: PromiseOrValue<string>,
     _companyName: PromiseOrValue<string>,
     _companyUrl: PromiseOrValue<string>,
+    _slackId: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -314,11 +360,25 @@ export interface Token extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  employeeSlackId(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   employees(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, string, string, BigNumber, BigNumber] & {
+    [
+      string,
+      string,
+      BigNumber,
+      string,
+      string,
+      BigNumber,
+      BigNumber,
+      string
+    ] & {
       employeeAddress: string;
       employeeName: string;
       employeeZanToken: BigNumber;
@@ -326,10 +386,16 @@ export interface Token extends BaseContract {
       companyUrl: string;
       employeeSendToken: BigNumber;
       employeeReceiveToken: BigNumber;
+      employeeSlackId: string;
     }
   >;
 
   getEmployeeInfoAddress(
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
+
+  getEmployeeInfoSlack(
+    _slackId: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
 
@@ -342,6 +408,7 @@ export interface Token extends BaseContract {
       _name: PromiseOrValue<string>,
       _companyName: PromiseOrValue<string>,
       _companyUrl: PromiseOrValue<string>,
+      _slackId: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -376,11 +443,25 @@ export interface Token extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    employeeSlackId(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     employees(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, string, string, BigNumber, BigNumber] & {
+      [
+        string,
+        string,
+        BigNumber,
+        string,
+        string,
+        BigNumber,
+        BigNumber,
+        string
+      ] & {
         employeeAddress: string;
         employeeName: string;
         employeeZanToken: BigNumber;
@@ -388,10 +469,16 @@ export interface Token extends BaseContract {
         companyUrl: string;
         employeeSendToken: BigNumber;
         employeeReceiveToken: BigNumber;
+        employeeSlackId: string;
       }
     >;
 
     getEmployeeInfoAddress(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
+
+    getEmployeeInfoSlack(
+      _slackId: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
 
@@ -418,6 +505,7 @@ export interface Token extends BaseContract {
       _name: PromiseOrValue<string>,
       _companyName: PromiseOrValue<string>,
       _companyUrl: PromiseOrValue<string>,
+      _slackId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -450,12 +538,22 @@ export interface Token extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    employeeSlackId(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     employees(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getEmployeeInfoAddress(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getEmployeeInfoSlack(
+      _slackId: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -467,6 +565,7 @@ export interface Token extends BaseContract {
       _name: PromiseOrValue<string>,
       _companyName: PromiseOrValue<string>,
       _companyUrl: PromiseOrValue<string>,
+      _slackId: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -499,12 +598,22 @@ export interface Token extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    employeeSlackId(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     employees(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getEmployeeInfoAddress(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getEmployeeInfoSlack(
+      _slackId: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
