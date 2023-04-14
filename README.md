@@ -20,3 +20,7 @@ npx hardhat node --network hardhat
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
+#### Contract Deploy - Scroll Testnet
+```
+npx hardhat run --network scrollTestnet scripts/deploy.js
+```

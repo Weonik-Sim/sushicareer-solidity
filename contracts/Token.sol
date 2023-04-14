@@ -58,28 +58,24 @@ contract Token {
     }
 
     // ユーザーの情報を取得
-    function _getEmployeeInfo() public view returns (Employee memory) {
-        // require(employeeExist[msg.sender] == true, "Employee not exists");
-        require(employeeExist[msg.sender] == true, string(abi.encodePacked("Employee not exists: ", msg.sender)));
-        uint id = employeeAddressId[msg.sender];
-        // string memory companyName = "";
-        // if (employeeCompanyExist[msg.sender] != false) {
-        //     uint companyId = employeeCompanyId[msg.sender];
-        // }
+    function _getEmployeeInfo(uint256 _from) public view returns (Employee memory) {
+        require(employeeExist[employeeIdAddress[_from]] == true, string(abi.encodePacked("Employee not exists: ", msg.sender)));
+        uint id = employeeAddressId[employeeIdAddress[_from]];
 
         return employees[id];
     }
 
-    function _sendSushi(uint256 _to, uint256 _sushi) public {
-        require(employeeExist[msg.sender] == true, "Employee already exists");
-        require(employeeExist[employeeIdAddress[_to]] == true, "Employee already exists");
-        require(employees[employeeAddressId[msg.sender]].employeeZanToken >= _sushi, "Employee already exists");
-        employees[employeeAddressId[msg.sender]].employeeZanToken -= _sushi;
-        employees[employeeAddressId[msg.sender]].employeeSendToken += _sushi;
+    function _sendSushi(uint256 _from, uint256 _to, uint256 _sushi) public {
+        require(employeeExist[employeeIdAddress[_from]] == true, "Employee not exists");
+        require(employeeExist[employeeIdAddress[_to]] == true, "Employee not exists");
+        require(employees[_from].employeeZanToken >= _sushi, "Not enough sushi");
+        
+        employees[_from].employeeZanToken -= _sushi;
+        employees[_from].employeeSendToken += _sushi;
         employees[_to].employeeZanToken += _sushi;
         employees[_to].employeeReceiveToken += _sushi;
 
-        emit RegisterEmployee(employeeAddressId[msg.sender], employees[employeeAddressId[msg.sender]].employeeName, employees[employeeAddressId[msg.sender]].employeeZanToken);
+        emit RegisterEmployee(_from, employees[_from].employeeName, employees[_from].employeeZanToken);
         emit RegisterEmployee(_to, employees[_to].employeeName, employees[_to].employeeZanToken);
     }
 
