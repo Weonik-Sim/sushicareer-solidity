@@ -65,6 +65,13 @@ contract Token {
         return employees[id];
     }
 
+    function getEmployeeInfoAddress() public view returns (uint256, Employee memory) {
+        require(employeeExist[msg.sender] == true, string(abi.encodePacked("Employee not exists: ", msg.sender)));
+        uint id = employeeAddressId[msg.sender];
+
+        return (id, employees[id]);
+    }
+
     function _sendSushi(uint256 _from, uint256 _to, uint256 _sushi) public {
         require(employeeExist[employeeIdAddress[_from]] == true, "Employee not exists");
         require(employeeExist[employeeIdAddress[_to]] == true, "Employee not exists");

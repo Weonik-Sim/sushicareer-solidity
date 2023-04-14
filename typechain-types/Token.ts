@@ -67,6 +67,7 @@ export interface TokenInterface extends utils.Interface {
     "employeeExist(address)": FunctionFragment;
     "employeeIdAddress(uint256)": FunctionFragment;
     "employees(uint256)": FunctionFragment;
+    "getEmployeeInfoAddress()": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
   };
@@ -81,6 +82,7 @@ export interface TokenInterface extends utils.Interface {
       | "employeeExist"
       | "employeeIdAddress"
       | "employees"
+      | "getEmployeeInfoAddress"
       | "name"
       | "symbol"
   ): FunctionFragment;
@@ -125,6 +127,10 @@ export interface TokenInterface extends utils.Interface {
     functionFragment: "employees",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "getEmployeeInfoAddress",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
 
@@ -154,6 +160,10 @@ export interface TokenInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "employees", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getEmployeeInfoAddress",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
 
@@ -257,6 +267,10 @@ export interface Token extends BaseContract {
       }
     >;
 
+    getEmployeeInfoAddress(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
@@ -315,6 +329,10 @@ export interface Token extends BaseContract {
     }
   >;
 
+  getEmployeeInfoAddress(
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
@@ -372,6 +390,10 @@ export interface Token extends BaseContract {
         employeeReceiveToken: BigNumber;
       }
     >;
+
+    getEmployeeInfoAddress(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, Token.EmployeeStructOutput]>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -433,6 +455,8 @@ export interface Token extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getEmployeeInfoAddress(overrides?: CallOverrides): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
@@ -477,6 +501,10 @@ export interface Token extends BaseContract {
 
     employees(
       arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getEmployeeInfoAddress(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
