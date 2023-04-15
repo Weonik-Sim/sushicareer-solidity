@@ -75,7 +75,6 @@ contract Token {
     }
 
     function getEmployeeInfoSlack(string memory _slackId) public view returns (uint256, Employee memory) {
-        require(employeeExist[msg.sender] == true, string(abi.encodePacked("Employee not exists: ", msg.sender)));
         require(employeeExist[employeeIdAddress[employeeSlackId[_slackId]]] == true, string(abi.encodePacked("Employee not exists: ", msg.sender)));
         uint id = employeeSlackId[_slackId];
 
